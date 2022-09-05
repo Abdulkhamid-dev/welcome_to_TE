@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import React,{ Component, memo, PureComponent} from 'react';
 
 type IUser = {
     name: string
@@ -10,11 +10,11 @@ type IProps = {
 }
 
 // functional component
-const FirstComponent = ({ name, age }: IUser) => (
+const FirstComponent = memo(({ name, age }: IUser) => (
     <div>
         my name is {name}, my age is {age}
     </div>
-);
+));
 
 // functional component
 const SecondComponent = ({ user: { name, age } }: IProps) => (
@@ -24,7 +24,8 @@ const SecondComponent = ({ user: { name, age } }: IProps) => (
 );
 
 // class component
-class ThirdComponent extends Component<IUser> {
+class ThirdComponent extends PureComponent<IUser> {
+    props: IUser
     render() {
         return (
             <div>
@@ -36,6 +37,7 @@ class ThirdComponent extends Component<IUser> {
 
 // class component
 class FourthComponent extends Component<IProps> {
+    props: IProps;
     render() {
         return (
             <div>
@@ -44,3 +46,23 @@ class FourthComponent extends Component<IProps> {
         )
     }
 }
+
+export const MemoizedSecondComponent = memo(
+    SecondComponent,
+    (prevProps: { user: { name: any; age: any; }; }, nextProps: { user: { name: any; age: any; }; }) => {
+      return (
+        prevProps.user.name === nextProps.user.name &&
+        prevProps.user.age === nextProps.user.age
+      );
+    }
+  );
+  
+  export const MemoizedFourthComponent = memo(
+    FourthComponent,
+    (prevProps: { user: { name: any; age: any; }; }, nextProps: { user: { name: any; age: any; }; }) => {
+      return (
+        prevProps.user.name === nextProps.user.name &&
+        prevProps.user.age === nextProps.user.age
+      );
+    }
+  );

@@ -5,11 +5,13 @@ const MainComponent = ({
 }) => {
     return (
         <Fragment>
-            <ChildComponent user={user} />
+            <Memoized user={user} />
         </Fragment>
     );
 };
-
+const Memoized = memo(ChildComponent, (prevProps, nextProps) => {
+    return prevProps.user.name === nextProps.user.name && prevProps.user.age === nextProps.user.age
+  });
 // memoized component
 const ChildComponent = memo(({ user: { name, age } }) => {
     return (
